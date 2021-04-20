@@ -41,15 +41,44 @@ server.ssl.https.verify-hostname=${PING_CENTRAL_VERIFY_HOSTNAME}
 #pingcentral.sso.oidc.role-claim-value-admin=IAM-Admin
 # The expected value of the role claim which indicates the user is a PingCentral application owner (non-administrator).
 #pingcentral.sso.oidc.role-claim-value-app-owner=Application-Owner
+# Set to false to manage user and group provisioning in PingCentral
+#pingcentral.sso.oidc.groups-claim-enabled=true
+# The name of the claim which identifies the list of comma-separated group names associated with the user.
+#pingcentral.sso.oidc.groups-claim-name=PingCentral-Groups
 #
 # OAuth2 resource server configuration for Admin API access.
 #
-# PingCentral supports only JWT access tokens verifiable via a JWKS endpoint. The JWKS endpoint derived from
-# the OIDC well known metadata is used by default. If that is not appropriate, define the JWKS endpoint
-# below to be used for verification of bearer tokens.
+# PingCentral supports only signed JWT access tokens verifiable via a JWKS endpoint. The JWKS endpoint derived from
+# the OIDC well known configuration endpoint is used by default. This is appropriate for PingFederate 10.1 and above
+# when "Use Centralized Signing Key" is set to true in the Access Token Manager. If instead a separate JWKS endpoint
+# path is defined in the Access Token Manager, define that below.
 #pingcentral.sso.oidc.oauth-jwk-set-uri=<JWKS_ENDPOINT_URI>
 # The name of the claim which identifies the username as determined by the Authorization Server
 #pingcentral.sso.oidc.oauth-username-claim-name=Username
 logging.level.com.pingidentity=${PING_CENTRAL_LOG_LEVEL}
+# If the access token manager defines issuer and/or audience claim values, define those below and PingCentral
+# will validate them. Otherwise, validation will not be performed.
+#pingcentral.sso.oidc.oauth-iss-claim-value=<EXPECTED_ISS_CLAIM_VALUE>
+#pingcentral.sso.oidc.oauth-aud-claim-value=<EXPECTED_AUD_CLAIM_VALUE>
 # Security headers to include in API responses
 #pingcentral.admin.api-security-headers=Strict-Transport-Security,Content-Security-Policy,Feature-Policy
+#
+# PingCentral Actuator (Healthcheck, info, and more)
+#management.endpoints.enabled-by-default=true
+#management.endpoints.web.exposure.include=*
+#
+# PingCentral Metrics
+#management.endpoint.metrics.enabled=false
+# Graphite Option
+#management.metrics.export.graphite.step=5s
+#management.metrics.export.graphite.enabled=true
+#management.metrics.export.graphite.host=127.0.0.1
+#management.metrics.export.graphite.port=2004
+# Prometheus Option
+#management.metrics.export.prometheus.enabled=true
+#management.metrics.export.prometheus.step=5s
+#
+# JPA Second level cache. Set hibernate.cache.use_second_level_cache to true
+# in order to use Groups cache.
+spring.jpa.properties.hibernate.cache.use_second_level_cache=false
+spring.jpa.properties.hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
